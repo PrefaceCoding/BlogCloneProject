@@ -1,0 +1,78 @@
+{% extends 'blog/base.html' %}
+{% block content %}
+        <!--posttitle class for css-->
+        <h1 class="posttitle">{{ post.title }}</h1>
+        <!--again always look into models for these field/attribute calls if it confuses you-->
+        <!--This checks if there is a published date aka checking if you published the post at all-->
+        {% if post.published_date %}
+            <div class="date postdate">
+                <!--if published date exists this gets printed-->
+                {{ post.published_date }}
+            </div>
+
+        {% else %}
+            <!-- pk:post.pk is necessary since the url for the published post is different for each post!
+                The publish button only exists if not yet published with the if post.published_date-->
+            <a class="btn btn-success" href="{% url 'post_publish' pk=post.pk %}">Publish</a>
+        {% endif %}
+
+    <!--linebreaksbr creates breaks for html
+        safe indicates that the values inside the data are safe and allows the values between html tags to 'escape'
+        This means that what would normally be printed as <p>sometext<p> will be now just sometext.
+        linebreaksbr will make it so every new line has a line break <br> html tag
+        otherwise this prints out the text input for the post-->
+    <p class="postcontent">{{ post.text|safe|linebreaksbr }}</p>
+    <!--For this project, all users are able to edit/create/destroy any posts
+        this is because all users are superusers
+        in future projects we will learn how to limit access for certain users-->
+    {% if user.is_authenticated %}
+        <a class="btn btn-outline-primary" href="{% url 'post_edit' pk=post.pk %}">
+        <!-- Just adding in a sweet sweet icon inside the button through the imported bootstrap icons
+            This is for EDIT POST-->
+            <i class="bi bi-pencil-square"></i>
+        </a>
+        <!-- THIS IS FOR DELETE/DENY POST-->
+        <a class="btn btn-outline-danger" href="{% url 'post_delete' pk=post.pk %}">
+            <i class="bi bi-x-circle-fill"></i>
+        </a>
+    {% endif %}
+
+    <hr>
+
+    <a class="btn btn-primary" href="{% url 'add_comment_to_post' pk=post.pk %}">Add Comment</a>
+    
+    <div class="container">
+        {% for comment in post.comments.all %}
+        <br>
+            {% if user.is_authenticated or comment.approved_comment %}
+                
+                {% if not comment.approved_comment %}
+                    {{ comment.create_date }}
+                    <p>{{ comment.text|safe|linebreaks }}</p>
+                    <p>Posted by: {{ comment.author }}</p>
+                    <a class="btn btn-outline-success" href="{% url 'comment_approve' pk=comment.pk %}">
+                        <span class="bi bi-check-circle-fill"></span>
+                    </a>
+                    <a class="btn btn-outline-danger" href="{% url 'comment_remove' pk=comment.pk %}">
+                        <span class="bi bi-x-circle-fill"></span>
+                    </a>                        
+                
+                {% else %}
+                    {{ comment.create_date }}
+                    <a class="btn btn-outline-danger" href="{% url 'comment_remove' pk=comment.pk %}">
+                    <span class="bi bi-x-circle-fill"></span>
+                    </a>
+                    <p>{{ comment.text|safe|linebreaks }}</p>
+                    <p>Posted by: {{ comment.author }}</p>
+                {% endif %}
+                <!-- '|'is the command for built-in filter MORE ON filters: https://docs.djangoproject.com/en/3.2/ref/templates/builtins/#filter -->
+                <!--safe gives us an 'unescaped' HTML to client, since our comments are created with <p>comment</p>
+                this safe command makes it so that the tags are not printed along
+                linebreaks makes it so that it replaces line breaks in plain text with appropriate tags (<br> for single line, blank line = <p>)-->
+
+                
+            {% endif %}
+            {% empty %}
+            <p>No Comments</p>
+        {% endfor %}
+{% endblock %}
