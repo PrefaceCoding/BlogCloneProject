@@ -1,2 +1,5 @@
 # BlogCloneProject
-Blog Clone Project 
+
+A Django Blog Cloning Project.
+
+![BlogFrontPage]
