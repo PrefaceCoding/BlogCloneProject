@@ -2,10 +2,10 @@
 {% block content %}
     {% for post in posts %}
         <div class="POST">
-            <!--Another filter for the date -->
+            <h1><a href="{% url 'post_detail' pk=post.pk %}">{{ post.title }}</a></h1>
             <p class="date">created: {{ post.create_date|date:"d-m-Y" }}</p>
-            <h1><a href="{% url 'post_detail' pk=post.pk %}">{{ post.author }}</a></h1>
-            <!--truncatechars filter makes it so that the text doesn't go over the stated limit of 200 charactes-->
-            <p>{{ post.text|safe|truncatechars:200 }}</p>
+            <p>{{ post.text|truncatechars:200 }}</p>
     {% endfor %}
 {% endblock %}
+
+

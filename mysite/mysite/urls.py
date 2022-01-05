@@ -15,17 +15,13 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
-# Built in authentication views from Django
 from django.contrib.auth import views as auth_views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('blog.urls')),
-    # Calling for built in views for authentication made by django
-    # Important: Django by default looks for the login.html from a specific file path - registration/login.html
-    # If you want to change the default you have to specify it as an argument after as_view('file/path') Otherwise it defaults to the
-    # URL specified in settings.py: LOGIN_REDIRECT_URL
     path('accounts/login/', auth_views.LoginView.as_view(), name='login'),
-    # Redirects after logging out to URL specified in settings.py: LOGOUT_REDIRECT_URL
-    path('accounts/logout/', auth_views.LogoutView.as_view(), name='logout')
+    path('accounts/logout/', auth_views.LogoutView.as_view(), name='logout'),
 ]
+
+

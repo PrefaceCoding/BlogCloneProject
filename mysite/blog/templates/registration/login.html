@@ -1,11 +1,8 @@
 {% extends 'blog/base.html' %}
-
 {% block content %}
-<!--More Boostrap codes for the login box-->
 <div class='p-5 mb-4 bg-light rounded-3'>
     <h2>Please Login: </h2>
     <h3>(Must be a superuser, please check in with site admin)</h3>
-    <!--the errors is a built in way for django to detect any error in submitted login form-->
     {% if form.errors %}
         <p>Your username and password did not match! Please try again.</p>
     {% endif %}
@@ -14,8 +11,10 @@
         {% csrf_token %}
         {{ form.as_p }}
         <input type="submit" class="btn btn-primary" value="Login">
-        <!-- next value is supplied in the urls - with the login page -->
         <input type="hidden" name="next" value={{ next }}>
     </form>
 </div>
 {% endblock %}
+
+
+

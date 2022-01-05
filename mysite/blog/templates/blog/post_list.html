@@ -3,19 +3,20 @@
 <div class="centerstage">
     {% for post in post_list %}
     <hr>
-    <div class="post">
-        <h1><a href="{% url 'post_detail' pk=post.pk %}">{{ post.title }}</a></h1>
-        <div class="date">
-            <!-- '|'is the command for built-in filter MORE ON filters: https://docs.djangoproject.com/en/3.2/ref/templates/builtins/#filter -->
-            <!-- The | is the filter command, much like the ones used for class based views in views
-            This filters the date by Date Month Year: you have to be aware of the spacing -->
-            <p>Published on: {{ post.published_date|date:"D M Y" }}</p>
-        </div>
-        <!-- Always look back into models to look for the different attributes that are called for 
-        .count counts number of comments-->
+    <div class="post-preview">
+        <a href="{% url 'post_detail' pk=post.pk %}">
+            <h2 class="post-title">{{ post.title }}</h2>
+            <h3 class="post-subtitle">{{ post.text|safe|truncatechars:50 }}</h3>
+        </a>
+        <p class="post-meta">
+            posted by 
+            <a>{{ post.author }}</a> 
+            on {{ post.published_date|date:"D M Y" }}.
+        </p>
         <a href="{% url 'post_detail' pk=post.pk %}">Comments: {{ post.approve_comments.count }}</a>
     </div>
-
     {% endfor %}
 </div>
 {% endblock %}
+
+
